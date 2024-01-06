@@ -1,0 +1,47 @@
+from datetime import datetime
+from airflow import DAG
+from airflow.operators.ssh_operator import SSHOperator
+
+# Define the Airflow DAG
+dag = DAG(
+    'my_dag',
+    description='My Airflow DAG',
+    schedule_interval='0 12 * * *',
+    start_date=datetime(2024, 1, 1),
+    catchup=False
+)
+
+# Task 1: SSH Operator for Python Function
+def my_function():
+    # Your logic here
+    output_value = ["value1", "value2", "value3"]  # Example list
+    return output_value
+
+def ssh_python_command():
+    output_list = my_function()
+    return f"python -c 'print(\"{output_list}\")'"
+
+task_1 = SSHOperator(
+    task_id='task_1',
+    ssh_conn_id='your_ssh_connection_id',
+    command=ssh_python_command,
+    dag=dag,
+    xcom_push=True,
+)
+
+# Task 2: SSH Operator
+def ssh_command(**context):
+    ti = context['ti']
+    output_list = ti.xcom_pull(task_ids='task_1')
+    # Handle the list as per your requirements
+    return f"echo {output_list}"
+
+task_2 = SSHOperator(
+    task_id='task_2',
+    ssh_conn_id='your_ssh_connection_id',
+    command=ssh_command,
+    dag=dag,
+)
+
+# Set dependencies
+task_1 >> task_2
