@@ -1,0 +1,35 @@
+import os
+
+def count_files_in_directory(path):
+    # Check if the path is a directory
+    if not os.path.isdir(path):
+        print(f"{path} is not a valid directory.")
+        return
+    
+    # List all files in the directory
+    files = os.listdir(path)
+    
+    # Check the number of files
+    file_count = len(files)
+    
+    # Print the count and the names of the files
+    if file_count == 2:
+        print(f"There are 2 files in the directory {path}.")
+    else:
+        print(f"There are {file_count} files in the directory {path}.")
+    
+    for file_name in files:
+        print(file_name)
+        
+        # Check row count
+        file_path = os.path.join(path, file_name)
+        try:
+            with open(file_path, 'r') as file:
+                line_count = sum(1 for line in file)
+            print(f"Number of rows in {file_name}: {line_count}")
+        except Exception as e:
+            print(f"Could not read {file_name}: {e}")
+
+if __name__ == "__main__":
+    directory_path = input("Enter the directory path: ")
+    count_files_in_directory(directory_path)
