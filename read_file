@@ -1,25 +1,26 @@
 import os
 
-# Define the path to the file
+def read_and_print_values(file_path):
+    # Check if the file exists
+    if os.path.exists(file_path):
+        # Open the file and read the lines
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+
+        # Strip any leading/trailing whitespaces and assign values to variables
+        for index, line in enumerate(lines):
+            var_name = f"var{index + 1}"
+            value = line.strip()  # Remove newline characters or other whitespaces
+            locals()[var_name] = value  # Dynamically create variables and assign values
+
+        # Print the values of the variables
+        for index in range(len(lines)):
+            var_name = f"var{index + 1}"
+            print(f"{var_name} = {locals()[var_name]}")
+
+    else:
+        print(f"The file {file_path} does not exist.")
+
+# Example usage:
 file_path = "/path/to/your/file.txt"  # Replace with your file's path
-
-# Check if the file exists
-if os.path.exists(file_path):
-    # Open the file and read the lines
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-
-    # Strip any leading/trailing whitespaces and assign values to variables
-    # Assuming one value per line and you want to store them in variables named var1, var2, var3, etc.
-    for index, line in enumerate(lines):
-        var_name = f"var{index + 1}"
-        value = line.strip()  # Remove newline characters or other whitespaces
-        locals()[var_name] = value  # Dynamically create variables and assign values
-
-    # Print the values of the variables
-    for index in range(len(lines)):
-        var_name = f"var{index + 1}"
-        print(f"{var_name} = {locals()[var_name]}")
-
-else:
-    print(f"The file {file_path} does not exist.")
+read_and_print_values(file_path)
