@@ -1,0 +1,29 @@
+import os
+
+# Navigate to the directory
+directory_path = "/data/darshan/"
+file_path = os.path.join(directory_path, "rak.txt")
+
+# Check if the directory exists
+if os.path.exists(file_path):
+    # Read the file and assign values to variables
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        
+        if len(lines) == 5:
+            model_name = lines[0].strip()
+            wb_server_c = lines[1].strip()
+            wb_path = lines[2].strip()
+            mart_name_c = lines[3].strip()
+            wb_sfile = lines[4].strip()
+
+            # Print the variables to verify
+            print(f"model_name: {model_name}")
+            print(f"wb_server_c: {wb_server_c}")
+            print(f"wb_path: {wb_path}")
+            print(f"mart_name_c: {mart_name_c}")
+            print(f"wb_sfile: {wb_sfile}")
+        else:
+            print("File does not contain 5 lines.")
+else:
+    print("Directory or file does not exist.")
