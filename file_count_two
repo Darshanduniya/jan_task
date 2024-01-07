@@ -1,0 +1,48 @@
+import os
+import subprocess
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def check_and_send_diff():
+    directory_path = '/data/darshan/'
+    rakesh_path = os.path.join(directory_path, 'rakesh.txt')
+    rakesh_bkp_path = os.path.join(directory_path, 'rakesh_bkp.txt')
+
+    # Check if files exist
+    if os.path.exists(rakesh_path) and os.path.exists(rakesh_bkp_path):
+        # Execute diff command
+        cmd = ['diff', rakesh_bkp_path, rakesh_path]
+        result = subprocess.run(cmd, capture_output=True, text=True)
+
+        # Extract differences
+        differences = result.stdout
+
+        # If differences found, send email
+        if differences:
+            send_email(differences)
+    else:
+        print("Files not found!")
+
+def send_email(differences):
+    sender_email = "your_email@example.com"
+    receiver_email = "receiver_email@example.com"
+    password = "your_password"
+
+    message = MIMEMultipart()
+    message["Subject"] = "Differences in Files"
+    message["From"] = sender_email
+    message["To"] = receiver_email
+
+    # Attach the differences as a .txt file
+    attachment = MIMEText(differences)
+    attachment.add_header("Content-Disposition", "attachment", filename="differences.txt")
+    message.attach(attachment)
+
+    # Send email
+    with smtplib.SMTP_SSL("smtp.example.com", 465) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
+
+if __name__ == "__main__":
+    check_and_send_diff()
