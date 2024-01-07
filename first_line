@@ -1,0 +1,12 @@
+# Define the file path
+file_path = "/data/duniya/darshan.txt"
+
+# Read the first line from the file
+with open(file_path, 'r') as file:
+    model_name = file.readline().strip()
+
+# Display the value of model_name (optional)
+print("Model Name:", model_name)
+
+model_name = '' "
+print(model_name)
