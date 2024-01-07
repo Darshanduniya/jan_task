@@ -1,0 +1,39 @@
+from airflow import DAG
+from airflow.operators.ssh_operator import SSHOperator
+from airflow.utils.dates import days_ago
+from airflow.operators.python import PythonOperator
+
+# Define the DAG
+with DAG(
+    dag_id='example_dag',
+    start_date=days_ago(2),
+    schedule_interval=None,
+) as dag:
+
+    # Task 1 (SSHOperator on Machine A)
+    def push_output_to_xcom(**context):
+        # Access output from remote SSH execution
+        output_data = context['ti'].xcom_pull(task_ids='execute_script_remotely')
+        context['ti'].xcom_push(key='output_data', value=output_data)
+
+    task_1_ssh = SSHOperator(
+        task_id='execute_script_remotely',
+        ssh_conn_id='my_ssh_connection_machine_a',
+        command='python my_python_script.py',  # Execute script remotely
+    )
+
+    task_1_xcom = PythonOperator(
+        task_id='push_to_xcom',
+        python_callable=push_output_to_xcom,
+        provide_context=True,
+    )
+
+    # Task 2 (SSHOperator on Machine B)
+    task_2_ssh = SSHOperator(
+        task_id='use_output_on_machine_b',
+        ssh_conn_id='my_ssh_connection_machine_b',
+        command=f"echo 'Output from Machine A: {{ ti.xcom_pull(task_ids='push_to_xcom', key='output_data') }}'",
+    )
+
+    # Define task dependencies
+    task_1_ssh >> task_1_xcom >> task_2_ssh
