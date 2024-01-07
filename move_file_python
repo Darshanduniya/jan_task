@@ -1,0 +1,24 @@
+import os
+import shutil
+
+def move_file_to_darshan_directory(src_dir):
+    # Define the source path
+    src_file = os.path.join(src_dir, "darshan.txt")
+    
+    # Check if the file exists in the source directory
+    if os.path.exists(src_file):
+        # Define the destination directory
+        dest_dir = "/data/darshan/"
+        
+        # Move the file to the destination directory
+        shutil.move(src_file, os.path.join(dest_dir, "darshan.txt"))
+        print(f"File darshan.txt moved to {dest_dir}")
+    else:
+        print("File darshan.txt not found in the specified directory.")
+
+if __name__ == "__main__":
+    # Specify the directory path where you want to check for darshan.txt
+    directory_path = "/path/to/directory"
+    
+    # Call the function to move the file
+    move_file_to_darshan_directory(directory_path)
