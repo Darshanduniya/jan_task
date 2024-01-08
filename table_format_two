@@ -1,0 +1,32 @@
+"""<html>
+<body>
+<h2>Hi team,</h2>
+<table border="1">
+    <tr>
+        <th>Check</th>
+        <th>Status</th>
+    </tr>
+    <tr>
+        <td>Empty file check</td>
+        <td>Pass</td>
+    </tr>
+    <tr>
+        <td>File present check</td>
+        <td>Pass</td>
+    </tr>
+    <tr>
+        <td>Count of backup files</td>
+        <td>{backup_count}</td>
+    </tr>
+    <tr>
+        <td>Count of current files</td>
+        <td>{current_count}</td>
+    </tr>
+    <tr>
+        <td>Duplicate between previous file and current file</td>
+        <td>{diff}</td>
+    </tr>
+</table>
+</body>
+</html>
+"""
