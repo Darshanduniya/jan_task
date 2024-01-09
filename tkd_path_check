@@ -1,0 +1,45 @@
+import os
+
+def validate_file(path):
+    """
+    Validates a given file path for empty data and duplicate rows.
+    """
+    if not os.path.isfile(path):
+        print(f"File not found at the specified path: {path}")
+        return
+
+    if os.path.getsize(path) == 0:
+        print(f"File at path {path} has empty data.")
+        return
+
+    seen_lines = set()
+    duplicate_lines = set()
+
+    with open(path, 'r') as file:
+        for line in file:
+            clean_line = line.strip()
+            if clean_line in seen_lines:
+                duplicate_lines.add(clean_line)
+            else:
+                seen_lines.add(clean_line)
+
+    if duplicate_lines:
+        print(f"Duplicate rows found in file {path}: {', '.join(duplicate_lines)}")
+    else:
+        print(f"No duplicate rows found in file {path}.")
+
+
+def check_files_for_data_and_duplicates(path1, path2):
+    """
+    Validates two given file paths for empty data and duplicate rows.
+    """
+    print("Validating first file:")
+    validate_file(path1)
+    print("\nValidating second file:")
+    validate_file(path2)
+
+
+# Example usage:
+path_to_file1 = "/data/darshan1.dat"  # Replace with the actual path to your first file
+path_to_file2 = "/data/darshan2.dat"  # Replace with the actual path to your second file
+check_files_for_data_and_duplicates(path_to_file1, path_to_file2)
