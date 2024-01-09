@@ -1,0 +1,28 @@
+def read_file_and_extract_values(file_path):
+    """Read the file and extract unique values before the first '%'."""
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        
+        distinct_values = set()
+        
+        for line in lines:
+            value = line.split('%')[0]
+            distinct_values.add(value)
+                
+    return distinct_values
+
+if __name__ == "__main__":
+    file1_path = "file1.txt"
+    file2_path = "file2.txt"
+    
+    distinct_values_file1 = read_file_and_extract_values(file1_path)
+    distinct_values_file2 = read_file_and_extract_values(file2_path)
+    
+    # Find duplicate values between the two sets
+    duplicate_values = distinct_values_file1.intersection(distinct_values_file2)
+    
+    # Print the result
+    if duplicate_values:
+        print(f"Duplicate values: {duplicate_values}")
+    else:
+        print("No duplicates found.")
