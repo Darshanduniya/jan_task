@@ -1,0 +1,11 @@
+print("Hello world")
+# Given data
+prd_package_id = 82
+stg_package_id = 84
+prd_release_flag = 1
+stg_release_flag = 1
+
+# Check conditions
+if prd_release_flag == 1 and stg_release_flag == 1:
+    max_package_id = max(prd_package_id, stg_package_id)
+    print(f"Max package ID is: {max_package_id}")
