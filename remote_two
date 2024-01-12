@@ -1,0 +1,41 @@
+import subprocess
+
+# SSH connection details
+ssh_host = 'remote_server_ip'
+ssh_port = 22
+ssh_username = 'your_ssh_username'
+ssh_password = 'your_ssh_password'
+
+# PostgreSQL connection details on the remote server
+postgres_host = 'remote_postgres_host'
+postgres_port = 5432
+postgres_database = 'remote_postgres_database'
+postgres_user = 'remote_postgres_user'
+postgres_password = 'remote_postgres_password'
+
+# Query to be executed
+postgres_query = 'SELECT package_id FROM ind;'
+
+# Construct the SSH and PostgreSQL commands
+ssh_command = f'sshpass -p {ssh_password} ssh {ssh_username}@{ssh_host} -p {ssh_port}'
+psql_command = f'psql -h {postgres_host} -p {postgres_port} -d {postgres_database} -U {postgres_user} -c "{postgres_query}"'
+
+# Combine the commands and execute the entire pipeline
+try:
+    # Connect to the remote server
+    print("Connecting to remote server...")
+    subprocess.run(ssh_command, shell=True, check=True)
+    print("Connected to remote server.")
+
+    # Execute the PostgreSQL query on the remote server
+    print("Executing psql on the remote server...")
+    process = subprocess.Popen(f'{ssh_command} "{psql_command}"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, error = process.communicate()
+
+    if process.returncode == 0:
+        print("Query executed successfully on the remote server.")
+        print("Query result on the remote server:", output.decode())
+    else:
+        print(f"Error executing the query on the remote server: {error.decode()}")
+except Exception as e:
+    print(f"Error: {str(e)}")
